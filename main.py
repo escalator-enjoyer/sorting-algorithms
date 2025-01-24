@@ -4,7 +4,7 @@ import sys
 
 pygame.init()
 
-bars = 500
+bars = 100
 
 width, height = 1080, 720
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
@@ -135,7 +135,7 @@ def quick_sort(arr, bar_width, height_mult):
   return arr
 
 # Modified bogo
-def bogo_sort(arr, bar_width, height_mult):
+def mod_bogo_sort(arr, bar_width, height_mult):
   global paused
   sorted_arr = sorted(arr)
 
@@ -157,6 +157,24 @@ def bogo_sort(arr, bar_width, height_mult):
 
   paused = True
   return arr
+
+# - Regular Bogo
+def bogo_sort(arr, bar_width, height_mult):
+  global paused
+  def is_sorted(arr):
+    for i in range(len(arr) - 1):
+      if arr[i] > arr[i + 1]:
+        return False
+    return True
+  
+  while not is_sorted(arr) and not paused:
+    arr = process_inputs(arr)
+    if paused:
+      return arr
+    random.shuffle(arr)
+    draw_things(arr, bar_width, height_mult)
+
+  paused = True
 
 # - Bozo
 def bozo_sort(arr, bar_width, height_mult):
@@ -256,18 +274,49 @@ def shaker_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# - Odd/Even sort
+def odd_even_sort(arr, bar_width, height_mult):
+  global paused
+  n = len(arr)
+  sorted = False
+
+  while not sorted and not paused:
+    sorted = True
+    for i in range(1, n - 1, 2):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        sorted = False
+      draw_things(arr, bar_width, height_mult, i)
+
+    for i in range(0, n - 1, 2):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        sorted = False
+      draw_things(arr, bar_width, height_mult, i)
+
+  paused = True
+  return arr
+
 # !!
 algorithms = {
-  'bubble': bubble_sort,
   'insertion': insertion_sort,
   'selection': selection_sort,
+  'bubble': bubble_sort,
+  'shaker': shaker_sort,
   'quick': quick_sort,
-  'modified bogo': bogo_sort,
+  'odd/even': odd_even_sort,
+  'bogo': bogo_sort,
+  'modified bogo': mod_bogo_sort,
   'bozo': bozo_sort,
   'stalin': stalin_sort,
   'miracle': miracle_sort,
   'intel. des.': intelligent_design_sort,
-  'shaker': shaker_sort,
 }
 def cycle(list):
   while True: yield from list
