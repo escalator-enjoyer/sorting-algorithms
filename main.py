@@ -134,7 +134,31 @@ def quick_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
-# Modified bozo
+# Modified bogo
+def bogo_sort(arr, bar_width, height_mult):
+  global paused
+  sorted_arr = sorted(arr)
+
+  while arr != sorted_arr and not paused:
+    arr = process_inputs(arr)
+    if paused:
+      return arr
+
+    temp_arr = [arr[i] for i in range(len(arr)) if arr[i] != sorted_arr[i]]
+    random.shuffle(temp_arr)
+
+    j = 0
+    for i in range(len(arr)):
+      if arr[i] != sorted_arr[i]:
+        arr[i] = temp_arr[j]
+        j += 1
+
+    draw_things(arr, bar_width, height_mult)
+
+  paused = True
+  return arr
+
+# - Bozo
 def bozo_sort(arr, bar_width, height_mult):
   global paused
   def is_sorted(arr):
@@ -143,21 +167,12 @@ def bozo_sort(arr, bar_width, height_mult):
         return False
     return True
 
-  locked = set()
-
   while not is_sorted(arr) and not paused:
     arr = process_inputs(arr)
     if paused:
       return arr
     i, j = random.randint(0, len(arr) - 1), random.randint(0, len(arr) - 1)
-    if i not in locked and j not in locked:
-      arr[i], arr[j] = arr[j], arr[i]
-      if is_sorted(arr):
-        locked.update(range(len(arr)))
-      else:
-        for k in range(len(arr)):
-          if k not in locked and arr[k] == sorted(arr)[k]:
-            locked.add(k)
+    arr[i], arr[j] = arr[j], arr[i]
     draw_things(arr, bar_width, height_mult, i)
   
   paused = True
@@ -208,7 +223,8 @@ algorithms = {
   'insertion': insertion_sort,
   'selection': selection_sort,
   'quick': quick_sort,
-  'modified bozo': bozo_sort,
+  'modified bogo': bogo_sort,
+  'bozo': bozo_sort,
   'stalin': stalin_sort,
   'miracle': miracle_sort,
   'intel. des.': intelligent_design_sort,
@@ -243,8 +259,10 @@ def process_inputs(arr):
           paused = True
           arr = sort(arr)
         elif event.key == pygame.K_e:
-          algorithm = next(algorithm_cycler)
           paused = True
+          arr = [i for i in range(1, bars + 1)]
+          random.shuffle(arr)
+          algorithm = next(algorithm_cycler)
         elif event.key == pygame.K_SPACE:
           paused = not paused
       elif event.type == pygame.VIDEORESIZE:
