@@ -6,6 +6,6 @@
 * Bogosort
 
 ### Controls
- E - Switch algorithm
- R - Randomize array
- Space - Pause/Play
+- E - Switch algorithm
+- R - Randomize array
+- Space - Pause/Play
