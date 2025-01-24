@@ -10,7 +10,7 @@ width, height = 1080, 720
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 offset_x = 40
 offset_y = 20
-fps = bars * 3.6
+fps = bars * 2.4
 clock = pygame.time.Clock()
 
 colors = {
