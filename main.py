@@ -10,7 +10,7 @@ width, height = 1080, 720
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 offset_x = 40
 offset_y = 20
-fps = bars * 2.4
+fps = bars * 3.6
 clock = pygame.time.Clock()
 
 colors = {
@@ -39,31 +39,6 @@ def draw_things(arr, bar_width, height_mult, current_bar=None):
   clock.tick(fps)
 
 # Sorts 
-# - Bubble
-def bubble_sort(arr, bar_width, height_mult):
-  global paused
-  n = len(arr)
-  
-  for i in range(n):
-    if paused:
-      return arr
-    sorted = True
-    
-    for j in range(n - i - 1):
-      arr = process_inputs(arr)
-      if paused:
-        return arr
-      if arr[j] > arr[j + 1]:
-        arr[j], arr[j + 1] = arr[j + 1], arr[j]
-        sorted = False
-      draw_things(arr, bar_width, height_mult, j)
-    
-    if sorted:
-      break
-  
-  paused = True
-  return arr
-
 # - Insertion
 def insertion_sort(arr, bar_width, height_mult):
   global paused
@@ -104,6 +79,70 @@ def selection_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# - Bubble
+def bubble_sort(arr, bar_width, height_mult):
+  global paused
+  n = len(arr)
+  
+  for i in range(n):
+    if paused:
+      return arr
+    sorted = True
+    
+    for j in range(n - i - 1):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[j] > arr[j + 1]:
+        arr[j], arr[j + 1] = arr[j + 1], arr[j]
+        sorted = False
+      draw_things(arr, bar_width, height_mult, j)
+    
+    if sorted:
+      break
+  
+  paused = True
+  return arr
+
+# - Shaker
+def shaker_sort(arr, bar_width, height_mult):
+  global paused
+  n = len(arr)
+  swapped = True
+  start = 0
+  end = n - 1
+
+  while swapped and not paused:
+    swapped = False
+    for i in range(start, end):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        swapped = True
+      draw_things(arr, bar_width, height_mult, i)
+    
+    if not swapped:
+      break
+
+    swapped = False
+    end -= 1
+
+    for i in range(end - 1, start - 1, -1):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        swapped = True
+      draw_things(arr, bar_width, height_mult, i)
+    
+    start += 1
+
+  paused = True
+  return arr
+
 # - Quick
 def quick_sort(arr, bar_width, height_mult):
   global paused
@@ -130,6 +169,110 @@ def quick_sort(arr, bar_width, height_mult):
       quick_sort_recursive(arr, pi + 1, high)
 
   quick_sort_recursive(arr, 0, len(arr) - 1)
+
+  paused = True
+  return arr
+
+# - Heap
+def heapify(arr, n, i):
+  largest = i
+  left = 2 * i + 1
+  right = 2 * i + 2
+
+  if left < n and arr[left] > arr[largest]:
+    largest = left
+
+  if right < n and arr[right] > arr[largest]:
+    largest = right
+
+  if largest != i:
+    arr[i], arr[largest] = arr[largest], arr[i]
+    draw_things(arr, bar_width, height_mult, i)
+    heapify(arr, n, largest)
+
+def heap_sort(arr, bar_width, height_mult):
+  global paused
+  n = len(arr)
+
+  for i in range(n // 2 - 1, -1, -1):
+    arr = process_inputs(arr)
+    if paused:
+      return arr
+    heapify(arr, n, i)
+
+  for i in range(n - 1, 0, -1):
+    arr = process_inputs(arr)
+    if paused:
+      return arr
+    arr[i], arr[0] = arr[0], arr[i]
+    draw_things(arr, bar_width, height_mult, i)
+    heapify(arr, i, 0)
+
+  paused = True
+  return arr
+
+# - Odd/Even sort
+def odd_even_sort(arr, bar_width, height_mult):
+  global paused
+  n = len(arr)
+  sorted = False
+
+  while not sorted and not paused:
+    sorted = True
+    for i in range(1, n - 1, 2):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        sorted = False
+      draw_things(arr, bar_width, height_mult, i)
+
+    for i in range(0, n - 1, 2):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        sorted = False
+      draw_things(arr, bar_width, height_mult, i)
+
+  paused = True
+  return arr
+
+# Radix
+def radix_sort(arr, bar_width, height_mult):
+  global paused
+  max_val = max(arr)
+  exp = 1
+
+  while max_val // exp > 0 and not paused:
+    count = [0] * 10
+    output = [0] * len(arr)
+
+    for i in range(len(arr)):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      index = arr[i] // exp
+      count[index % 10] += 1
+
+    for i in range(1, 10):
+      count[i] += count[i - 1]
+
+    for i in range(len(arr) - 1, -1, -1):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      index = arr[i] // exp
+      output[count[index % 10] - 1] = arr[i]
+      count[index % 10] -= 1
+
+    for i in range(len(arr)):
+      arr[i] = output[i]
+      draw_things(arr, bar_width, height_mult, i)
+
+    exp *= 10
 
   paused = True
   return arr
@@ -235,74 +378,6 @@ def intelligent_design_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
-# - Shaker
-def shaker_sort(arr, bar_width, height_mult):
-  global paused
-  n = len(arr)
-  swapped = True
-  start = 0
-  end = n - 1
-
-  while swapped and not paused:
-    swapped = False
-    for i in range(start, end):
-      arr = process_inputs(arr)
-      if paused:
-        return arr
-      if arr[i] > arr[i + 1]:
-        arr[i], arr[i + 1] = arr[i + 1], arr[i]
-        swapped = True
-      draw_things(arr, bar_width, height_mult, i)
-    
-    if not swapped:
-      break
-
-    swapped = False
-    end -= 1
-
-    for i in range(end - 1, start - 1, -1):
-      arr = process_inputs(arr)
-      if paused:
-        return arr
-      if arr[i] > arr[i + 1]:
-        arr[i], arr[i + 1] = arr[i + 1], arr[i]
-        swapped = True
-      draw_things(arr, bar_width, height_mult, i)
-    
-    start += 1
-
-  paused = True
-  return arr
-
-# - Odd/Even sort
-def odd_even_sort(arr, bar_width, height_mult):
-  global paused
-  n = len(arr)
-  sorted = False
-
-  while not sorted and not paused:
-    sorted = True
-    for i in range(1, n - 1, 2):
-      arr = process_inputs(arr)
-      if paused:
-        return arr
-      if arr[i] > arr[i + 1]:
-        arr[i], arr[i + 1] = arr[i + 1], arr[i]
-        sorted = False
-      draw_things(arr, bar_width, height_mult, i)
-
-    for i in range(0, n - 1, 2):
-      arr = process_inputs(arr)
-      if paused:
-        return arr
-      if arr[i] > arr[i + 1]:
-        arr[i], arr[i + 1] = arr[i + 1], arr[i]
-        sorted = False
-      draw_things(arr, bar_width, height_mult, i)
-
-  paused = True
-  return arr
-
 # !!
 algorithms = {
   'insertion': insertion_sort,
@@ -310,7 +385,9 @@ algorithms = {
   'bubble': bubble_sort,
   'shaker': shaker_sort,
   'quick': quick_sort,
+  'heap': heap_sort,
   'odd/even': odd_even_sort,
+  'radix': radix_sort,
   'bogo': bogo_sort,
   'modified bogo': mod_bogo_sort,
   'bozo': bozo_sort,
