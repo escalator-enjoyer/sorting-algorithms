@@ -4,13 +4,13 @@ import sys
 
 pygame.init()
 
-bars = 100
+bars = 500
 
-width, height = 800, 600
+width, height = 1080, 720
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 offset_x = 40
 offset_y = 20
-fps = 120
+fps = bars * 1.2
 clock = pygame.time.Clock()
 
 colors = {
@@ -91,13 +91,11 @@ def selection_sort(arr, bar_width, height_mult):
   global paused
   n = len(arr)
   for i in range(n):
-    if paused:
-      return arr
+    if paused: return arr
     min_idx = i
     for j in range(i + 1, n):
       arr = process_inputs(arr)
-      if paused:
-        return arr
+      if paused: return arr
       if arr[j] < arr[min_idx]:
         min_idx = j
       draw_things(arr, bar_width, height_mult, j)
@@ -136,6 +134,7 @@ def quick_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# Modified bozo
 def bozo_sort(arr, bar_width, height_mult):
   global paused
   def is_sorted(arr):
@@ -164,6 +163,7 @@ def bozo_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# - Stalin
 def stalin_sort(arr, bar_width, height_mult):
   global paused
   i = 1
@@ -177,6 +177,7 @@ def stalin_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# - Miracle
 def miracle_sort(arr, bar_width, height_mult):
   global paused
   def is_sorted(arr):
@@ -193,6 +194,7 @@ def miracle_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# - Intelligent design
 def intelligent_design_sort(arr, bar_width, height_mult):
   global paused
   arr = process_inputs(arr)
