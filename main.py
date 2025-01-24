@@ -176,11 +176,20 @@ def miracle_sort(arr, bar_width, height_mult):
         return False
     return True
 
-  if paused or is_sorted(arr):
-    return arr
-  
+  while not (paused or is_sorted(arr)):
+    arr = process_inputs(arr)
+    draw_things(arr, bar_width, height_mult)
+    pass
+
   paused = True
-  return miracle_sort(arr, bar_width, height_mult)
+  return arr
+
+def intelligent_design_sort(arr, bar_width, height_mult):
+  global paused
+  arr = process_inputs(arr)
+
+  paused = True
+  return arr
 
 # !!
 algorithms = {
@@ -191,6 +200,7 @@ algorithms = {
   'bozo': bozo_sort,
   'stalin': stalin_sort,
   'miracle': miracle_sort,
+  'intelligent design': intelligent_design_sort,
 }
 def cycle(list):
   while True: yield from list

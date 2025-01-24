@@ -4,6 +4,9 @@
 * Selection sort
 * Quicksort
 * Bogosort
+* Stalin sort
+* Miracle sort
+* Intelligent Design sort
 
 ### Controls
 - E - Switch algorithm
