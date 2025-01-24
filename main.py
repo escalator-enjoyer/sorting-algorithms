@@ -10,7 +10,7 @@ width, height = 1080, 720
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 offset_x = 40
 offset_y = 20
-fps = bars * 1.2
+fps = bars * 2.4
 clock = pygame.time.Clock()
 
 colors = {
@@ -19,7 +19,7 @@ colors = {
   'gray': (50, 50, 50),
   'pink': (247, 140, 255),
   'orange': (255, 200, 140),
-  'red': (255, 140, 140),
+  'red': (255, 0, 84),
 }
 
 font = pygame.font.Font('OpenSans.ttf', 30)
@@ -217,6 +217,45 @@ def intelligent_design_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# - Shaker
+def shaker_sort(arr, bar_width, height_mult):
+  global paused
+  n = len(arr)
+  swapped = True
+  start = 0
+  end = n - 1
+
+  while swapped and not paused:
+    swapped = False
+    for i in range(start, end):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        swapped = True
+      draw_things(arr, bar_width, height_mult, i)
+    
+    if not swapped:
+      break
+
+    swapped = False
+    end -= 1
+
+    for i in range(end - 1, start - 1, -1):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        swapped = True
+      draw_things(arr, bar_width, height_mult, i)
+    
+    start += 1
+
+  paused = True
+  return arr
+
 # !!
 algorithms = {
   'bubble': bubble_sort,
@@ -228,6 +267,7 @@ algorithms = {
   'stalin': stalin_sort,
   'miracle': miracle_sort,
   'intel. des.': intelligent_design_sort,
+  'shaker': shaker_sort,
 }
 def cycle(list):
   while True: yield from list
@@ -260,6 +300,7 @@ def process_inputs(arr):
           arr = sort(arr)
         elif event.key == pygame.K_e:
           paused = True
+          clock.tick(fps)
           arr = [i for i in range(1, bars + 1)]
           random.shuffle(arr)
           algorithm = next(algorithm_cycler)
