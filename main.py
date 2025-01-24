@@ -144,12 +144,21 @@ def bozo_sort(arr, bar_width, height_mult):
         return False
     return True
 
+  locked = set()
+
   while not is_sorted(arr) and not paused:
     arr = process_inputs(arr)
     if paused:
       return arr
     i, j = random.randint(0, len(arr) - 1), random.randint(0, len(arr) - 1)
-    arr[i], arr[j] = arr[j], arr[i]
+    if i not in locked and j not in locked:
+      arr[i], arr[j] = arr[j], arr[i]
+      if is_sorted(arr):
+        locked.update(range(len(arr)))
+      else:
+        for k in range(len(arr)):
+          if k not in locked and arr[k] == sorted(arr)[k]:
+            locked.add(k)
     draw_things(arr, bar_width, height_mult, i)
   
   paused = True
@@ -197,10 +206,10 @@ algorithms = {
   'insertion': insertion_sort,
   'selection': selection_sort,
   'quick': quick_sort,
-  'bozo': bozo_sort,
+  'modified bozo': bozo_sort,
   'stalin': stalin_sort,
   'miracle': miracle_sort,
-  'intelligent design': intelligent_design_sort,
+  'intel. des.': intelligent_design_sort,
 }
 def cycle(list):
   while True: yield from list
