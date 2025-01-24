@@ -136,7 +136,7 @@ def quick_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
-def bogo_sort(arr, bar_width, height_mult):
+def bozo_sort(arr, bar_width, height_mult):
   global paused
   def is_sorted(arr):
     for i in range(len(arr) - 1):
@@ -155,13 +155,42 @@ def bogo_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+def stalin_sort(arr, bar_width, height_mult):
+  global paused
+  i = 1
+  while i < len(arr):
+    draw_things(arr, bar_width, height_mult, i)
+    if arr[i] < arr[i-1]:
+      arr.pop(i)
+    else:
+      i += 1
+  
+  paused = True
+  return arr
+
+def miracle_sort(arr, bar_width, height_mult):
+  global paused
+  def is_sorted(arr):
+    for i in range(len(arr) - 1):
+      if arr[i] > arr[i + 1]:
+        return False
+    return True
+
+  if paused or is_sorted(arr):
+    return arr
+  
+  paused = True
+  return miracle_sort(arr, bar_width, height_mult)
+
 # !!
 algorithms = {
   'bubble': bubble_sort,
   'insertion': insertion_sort,
   'selection': selection_sort,
   'quick': quick_sort,
-  'bogo': bogo_sort,
+  'bozo': bozo_sort,
+  'stalin': stalin_sort,
+  'miracle': miracle_sort,
 }
 def cycle(list):
   while True: yield from list
