@@ -143,6 +143,35 @@ def shaker_sort(arr, bar_width, height_mult):
   paused = True
   return arr
 
+# - Odd/Even sort
+def odd_even_sort(arr, bar_width, height_mult):
+  global paused
+  n = len(arr)
+  sorted = False
+
+  while not sorted and not paused:
+    sorted = True
+    for i in range(1, n - 1, 2):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        sorted = False
+      draw_things(arr, bar_width, height_mult, i)
+
+    for i in range(0, n - 1, 2):
+      arr = process_inputs(arr)
+      if paused:
+        return arr
+      if arr[i] > arr[i + 1]:
+        arr[i], arr[i + 1] = arr[i + 1], arr[i]
+        sorted = False
+      draw_things(arr, bar_width, height_mult, i)
+
+  paused = True
+  return arr
+
 # - Quick
 def quick_sort(arr, bar_width, height_mult):
   global paused
@@ -207,35 +236,6 @@ def heap_sort(arr, bar_width, height_mult):
     arr[i], arr[0] = arr[0], arr[i]
     draw_things(arr, bar_width, height_mult, i)
     heapify(arr, i, 0)
-
-  paused = True
-  return arr
-
-# - Odd/Even sort
-def odd_even_sort(arr, bar_width, height_mult):
-  global paused
-  n = len(arr)
-  sorted = False
-
-  while not sorted and not paused:
-    sorted = True
-    for i in range(1, n - 1, 2):
-      arr = process_inputs(arr)
-      if paused:
-        return arr
-      if arr[i] > arr[i + 1]:
-        arr[i], arr[i + 1] = arr[i + 1], arr[i]
-        sorted = False
-      draw_things(arr, bar_width, height_mult, i)
-
-    for i in range(0, n - 1, 2):
-      arr = process_inputs(arr)
-      if paused:
-        return arr
-      if arr[i] > arr[i + 1]:
-        arr[i], arr[i + 1] = arr[i + 1], arr[i]
-        sorted = False
-      draw_things(arr, bar_width, height_mult, i)
 
   paused = True
   return arr
@@ -384,9 +384,9 @@ algorithms = {
   'selection': selection_sort,
   'bubble': bubble_sort,
   'shaker': shaker_sort,
+  'odd/even': odd_even_sort,
   'quick': quick_sort,
   'heap': heap_sort,
-  'odd/even': odd_even_sort,
   'radix': radix_sort,
   'bogo': bogo_sort,
   'modified bogo': mod_bogo_sort,
