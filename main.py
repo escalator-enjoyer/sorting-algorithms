@@ -4,7 +4,7 @@ import sys
 
 pygame.init()
 
-bars = 100
+bars = 250
 
 width, height = 1080, 720
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
@@ -32,8 +32,8 @@ def draw_things(arr, bar_width, height_mult, current_bar=None):
   if paused:
     pause_text = font.render("Paused - Space to unpause", True, colors['orange'])
     screen.blit(pause_text, ((width - pause_text.get_width()) // 2, 10))
-  algorithm_text = font.render(algorithm, True, colors['pink'])
-  screen.blit(algorithm_text, (10, 10))
+  algorithm_name = font.render(algorithm, True, colors['pink'])
+  screen.blit(algorithm_name, (10, 10))
 
   pygame.display.flip()
   clock.tick(fps)
@@ -199,7 +199,9 @@ def quick_sort(arr, bar_width, height_mult):
 
   quick_sort_recursive(arr, 0, len(arr) - 1)
 
-  paused = True
+  # paused = True
+  clock.tick(3)
+  random.shuffle(arr)
   return arr
 
 # - Heap
